@@ -75,11 +75,50 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 1.8em; }
-            .hero .stats { gap: 24px; }
-            .hero .stat .number { font-size: 1.8em; }
-            table { font-size: 0.8em; }
-            th, td { padding: 8px; }
+            .container { padding: 0 16px; }
+            .hero { padding: 48px 0 40px; }
+            .hero h1 { font-size: 1.6em; line-height: 1.3; }
+            .hero .subtitle { font-size: 1em; }
+            .hero .stats { gap: 16px; }
+            .hero .stat { min-width: 120px; }
+            .hero .stat .number { font-size: 1.5em; }
+            .hero .stat .label { font-size: 0.75em; }
+            section { padding: 40px 0; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+
+            /* Tables scroll horizontally on mobile */
+            table { font-size: 0.75em; display: block; overflow-x: auto; white-space: nowrap; }
+            th, td { padding: 8px 10px; }
+
+            /* Video labels stack on mobile */
+            .video-label { flex-direction: column; gap: 4px; padding: 10px 12px; }
+            .video-label .title { font-size: 0.9em; }
+            .video-label .meta { font-size: 0.8em; }
+
+            /* Pipeline code block scrollable */
+            .pipeline { font-size: 0.7em; padding: 14px; }
+
+            /* Problem/solution boxes */
+            .problem-box, .solution-box { padding: 14px 16px; }
+
+            /* Approach cards */
+            .approach { padding: 14px; }
+            .approach .name { font-size: 0.95em; }
+            .approach .detail { font-size: 0.82em; }
+
+            /* Hardware table */
+            .hardware-limit { padding: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.3em; }
+            .hero .stats { gap: 12px; }
+            .hero .stat { min-width: 100px; }
+            .hero .stat .number { font-size: 1.3em; }
+            h2 { font-size: 1.2em; }
+            table { font-size: 0.7em; }
+            th, td { padding: 6px 8px; }
         }
     </style>
 </head>
