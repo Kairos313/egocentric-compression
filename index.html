@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egocentric-Native Compression</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #e0e0e0; background: #0a0a0a; line-height: 1.7; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* Hero */
+        .hero { padding: 80px 0 60px; text-align: center; border-bottom: 1px solid #222; }
+        .hero h1 { font-size: 2.8em; font-weight: 700; color: #fff; margin-bottom: 16px; }
+        .hero .subtitle { font-size: 1.2em; color: #888; max-width: 700px; margin: 0 auto 32px; }
+        .hero .stats { display: flex; justify-content: center; gap: 48px; margin-top: 32px; flex-wrap: wrap; }
+        .hero .stat { text-align: center; }
+        .hero .stat .number { font-size: 2.4em; font-weight: 700; color: #4ade80; }
+        .hero .stat .label { font-size: 0.85em; color: #888; margin-top: 4px; }
+
+        /* Sections */
+        section { padding: 60px 0; border-bottom: 1px solid #1a1a1a; }
+        h2 { font-size: 1.8em; color: #fff; margin-bottom: 24px; }
+        h3 { font-size: 1.3em; color: #ddd; margin: 32px 0 16px; }
+        p { color: #aaa; margin-bottom: 16px; }
+
+        /* Video */
+        .video-section { background: #0f0f0f; }
+        .video-container { margin: 24px 0; border-radius: 8px; overflow: hidden; background: #000; }
+        .video-container video { width: 100%; display: block; }
+        .video-label { padding: 12px 16px; background: #1a1a1a; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .video-label .title { font-weight: 600; color: #fff; }
+        .video-label .meta { font-size: 0.85em; color: #4ade80; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9em; }
+        th { background: #1a1a1a; color: #fff; padding: 12px 16px; text-align: left; font-weight: 600; }
+        td { padding: 10px 16px; border-bottom: 1px solid #1a1a1a; color: #ccc; }
+        tr:hover td { background: #111; }
+        .positive { color: #4ade80; font-weight: 600; }
+        .negative { color: #f87171; }
+        .neutral { color: #fbbf24; }
+
+        /* Approach cards */
+        .approaches { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 24px 0; }
+        .approach { background: #111; border: 1px solid #222; border-radius: 8px; padding: 20px; }
+        .approach .name { font-weight: 600; color: #fff; font-size: 1.05em; margin-bottom: 8px; }
+        .approach .result { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; margin-bottom: 8px; }
+        .approach .result.works { background: #064e3b; color: #34d399; }
+        .approach .result.fails { background: #450a0a; color: #fca5a5; }
+        .approach .result.marginal { background: #422006; color: #fbbf24; }
+        .approach .detail { color: #888; font-size: 0.9em; }
+
+        /* Problem section */
+        .problem-box { background: #1a1a1a; border-left: 4px solid #f87171; padding: 20px 24px; border-radius: 0 8px 8px 0; margin: 24px 0; }
+        .solution-box { background: #1a1a1a; border-left: 4px solid #4ade80; padding: 20px 24px; border-radius: 0 8px 8px 0; margin: 24px 0; }
+
+        /* Code blocks */
+        .pipeline { background: #111; border: 1px solid #222; border-radius: 8px; padding: 20px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em; color: #8b949e; overflow-x: auto; margin: 16px 0; white-space: pre; }
+        .pipeline .comment { color: #6a737d; }
+        .pipeline .highlight { color: #4ade80; }
+
+        /* Footer */
+        footer { padding: 40px 0; text-align: center; color: #555; font-size: 0.85em; }
+        footer a { color: #4ade80; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Links */
+        a { color: #4ade80; }
+
+        /* Hardware section */
+        .hardware-limit { background: #1c1917; border: 1px solid #44403c; border-radius: 8px; padding: 24px; margin: 24px 0; }
+        .hardware-limit h4 { color: #fbbf24; margin-bottom: 12px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8em; }
+            .hero .stats { gap: 24px; }
+            .hero .stat .number { font-size: 1.8em; }
+            table { font-size: 0.8em; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="container">
+        <h1>Egocentric-Native Compression</h1>
+        <p class="subtitle">
+            Compressing head-mounted factory video for Physical AI.
+            15 approaches tested. One works: pixel binning.
+        </p>
+        <div class="stats">
+            <div class="stat">
+                <div class="number">2.5x</div>
+                <div class="label">Compression (2x2 binning)</div>
+            </div>
+            <div class="stat">
+                <div class="number">4.9x</div>
+                <div class="label">Compression (4x4 binning)</div>
+            </div>
+            <div class="stat">
+                <div class="number">15</div>
+                <div class="label">Approaches Tested</div>
+            </div>
+            <div class="stat">
+                <div class="number">9.2 &rarr; 3.7 hrs</div>
+                <div class="label">Upload Time (1K devices)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Problem -->
+<section>
+    <div class="container">
+        <h2>The Problem</h2>
+        <div class="problem-box">
+            <p style="color:#f87171; font-weight:600; margin-bottom:8px;">Upload is the bottleneck for Physical AI data scaling.</p>
+            <p>A data collection device produces 10 GB per worker-day. 1,000 devices in a single factory = 10 TB/day to upload. A typical industrial ISP in India provisions 500 Mbps of shared upload. Under these conditions, the minimum cycle time per factory is <strong style="color:#fff">44 hours</strong> &mdash; longer than a day.</p>
+        </div>
+        <p>The current product format (456&times;256 at 30fps H.265) produces ~2 GB per 8-hour shift. For 1,000 devices, that's 2 TB/day &mdash; requiring <strong>9.2 hours</strong> to upload over 500 Mbps.</p>
+        <p>An egocentric-native codec should exploit the unique properties of head-mounted factory video: fixed environment, repetitive tasks, camera on a human head. The goal is to reduce upload size while preserving quality for Physical AI training.</p>
+    </div>
+</section>
+
+<!-- Video Comparisons -->
+<section class="video-section">
+    <div class="container">
+        <h2>Visual Comparisons</h2>
+        <p>Side-by-side at 1080p, 30fps. Left: original. Right: compressed + reconstructed with Lanczos upscale.</p>
+
+        <div class="video-container">
+            <div class="video-label">
+                <span class="title">Original vs 2x2 Pixel Binning</span>
+                <span class="meta">823 MB/8hr &bull; 2.5x smaller &bull; Upload: 3.7 hrs</span>
+            </div>
+            <video controls loop muted playsinline preload="metadata">
+                <source src="videos/original_vs_2x2.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="video-container">
+            <div class="video-label">
+                <span class="title">Original vs 4x4 Pixel Binning</span>
+                <span class="meta">423 MB/8hr &bull; 4.9x smaller &bull; Upload: 1.9 hrs</span>
+            </div>
+            <video controls loop muted playsinline preload="metadata">
+                <source src="videos/original_vs_4x4.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+</section>
+
+<!-- Results -->
+<section>
+    <div class="container">
+        <h2>Compression Results</h2>
+        <p>All measurements at 1080p 30fps on real factory egocentric footage (worker_001, Build AI Gen 4 device).</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Configuration</th>
+                    <th>8hr Shift Size</th>
+                    <th>Compression</th>
+                    <th>Upload (1K @ 500Mbps)</th>
+                    <th>PSNR</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Original (H.265 456&times;256 30fps)</td>
+                    <td>2,071 MB</td>
+                    <td>1x</td>
+                    <td class="negative">9.2 hours</td>
+                    <td>&mdash;</td>
+                </tr>
+                <tr style="background:#0a1a0a;">
+                    <td><strong>2x2 Pixel Binning, CRF 28, 10-bit</strong></td>
+                    <td><strong>823 MB</strong></td>
+                    <td class="positive">2.5x</td>
+                    <td class="positive">3.7 hours</td>
+                    <td>22.3 dB</td>
+                </tr>
+                <tr style="background:#0a1a0a;">
+                    <td><strong>4x4 Pixel Binning, CRF 23, 10-bit</strong></td>
+                    <td><strong>423 MB</strong></td>
+                    <td class="positive">4.9x</td>
+                    <td class="positive">1.9 hours</td>
+                    <td>19.9 dB</td>
+                </tr>
+                <tr>
+                    <td>2x2 Binning, CRF 32, 10-bit</td>
+                    <td>421 MB</td>
+                    <td class="positive">4.9x</td>
+                    <td class="positive">1.9 hours</td>
+                    <td>23.2 dB</td>
+                </tr>
+                <tr>
+                    <td>H.265 CRF 28 (no binning)</td>
+                    <td>3,301 MB</td>
+                    <td>0.6x</td>
+                    <td class="negative">14.7 hours</td>
+                    <td>30.7 dB</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="solution-box">
+            <p style="color:#4ade80; font-weight:600; margin-bottom:8px;">Recommended deployment</p>
+            <div class="pipeline">DEVICE (ARM Cortex-A76 + H.265 hardware encoder):
+  1080p 30fps &rarr; 2x2 area average &rarr; 960x540
+  &rarr; H.265 encode CRF 28, 10-bit
+  &rarr; Upload (<span class="highlight">823 MB per 8hr shift</span>)
+
+SERVER:
+  H.265 decode &rarr; 960x540 30fps
+  &rarr; Lanczos 2x upscale &rarr; 1920x1080
+  &rarr; Ready for Physical AI training</div>
+        </div>
+    </div>
+</section>
+
+<!-- What Didn't Work -->
+<section>
+    <div class="container">
+        <h2>What We Tried (15 Approaches)</h2>
+        <p>Exhaustive testing revealed that H.265 is already extremely optimized internally. Almost every external preprocessing approach duplicates what the codec already does.</p>
+
+        <h3>What Works</h3>
+        <div class="approaches">
+            <div class="approach">
+                <span class="result works">WORKS</span>
+                <div class="name">Pixel Binning (2x2 / 4x4 area averaging)</div>
+                <div class="detail">The only approach that meaningfully outperforms H.265 alone. Reduces pixel count before encoding &mdash; the one thing the codec can't do internally. 2x2 binning at CRF 28 achieves 2.5x compression; 4x4 at CRF 23 achieves 4.9x. 10-bit encoding preserves fractional bin averages.</div>
+            </div>
+        </div>
+
+        <h3>What Doesn't Work (and Why)</h3>
+        <div class="approaches">
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">Neural Super-Resolution (ESRGAN, SwinIR)</div>
+                <div class="detail">+0.21 dB over Lanczos at best. Pretrained SR models expect clean bicubic degradation, not H.265 compression artifacts (blocking, ringing, banding). The models hallucinate textures that don't match the original, hurting SSIM. Tested both pretrained and fine-tuned on 2,000 egocentric frame pairs. SwinIR was actually worse than Lanczos.</div>
+            </div>
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">IMU Motion Prediction</div>
+                <div class="detail">Gyroscope explains only 1% of pixel motion. 72% of motion is local (hands/tools/objects) &mdash; IMU has zero information about this. 27% is head translation parallax &mdash; gyroscope can't predict depth-dependent motion. H.265 motion vectors already handle the 1% rotation component.</div>
+            </div>
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">ROI QP Maps (Zipstream-style)</div>
+                <div class="detail">43% LARGER than uniform CRF at same quality. H.265 already does per-CTU adaptive QP internally. Splitting into two streams (high-quality ROI + low-quality background) loses inter-region temporal coherence. Works for fixed surveillance cameras, not head-mounted cameras with constant global motion.</div>
+            </div>
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">Background Prior Compositing</div>
+                <div class="detail">Camera is head-mounted and moves constantly. 66% of pixels are classified as "foreground" because the viewpoint changes every frame. Cross-clip background SSIM is 0.13 &mdash; the worker moves to completely different areas. A static background reference is useless.</div>
+            </div>
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">Chroma Separation (Luma 30fps + Color 2fps)</div>
+                <div class="detail">Combined streams are LARGER than full-color encoding. H.265 YUV 4:2:0 already subsamples chroma 4x. A separate low-fps color stream adds I-frame overhead that exceeds any savings.</div>
+            </div>
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">Per-Shot Adaptive CRF</div>
+                <div class="detail">3-6% savings with 3.8 dB quality loss. Each segment boundary requires a costly I-frame that destroys inter-segment temporal redundancy. H.265 already adapts internally via skip blocks &mdash; explicitly varying CRF adds overhead without meaningful savings.</div>
+            </div>
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">Global Motion Compensation (ORB + Homography)</div>
+                <div class="detail">Encoding residuals is 12% LARGER than raw H.265. The residual signal (centered at 128) looks like noise to the codec, defeating temporal prediction. Reconstruction errors compound frame-over-frame. H.265's internal motion compensation handles global motion better.</div>
+            </div>
+            <div class="approach">
+                <span class="result marginal">MARGINAL</span>
+                <div class="name">Temporal Noise Reduction (hqdn3d)</div>
+                <div class="detail">2.8% bitrate saving, 0.008 SSIM loss. Source is already H.265 compressed &mdash; no temporal noise left to remove. Could be added as a free preprocessing step but not a priority.</div>
+            </div>
+            <div class="approach">
+                <span class="result marginal">MARGINAL</span>
+                <div class="name">Adaptive GOP Length</div>
+                <div class="detail">1.3% saving (keyint 250 &rarr; 5400). At 456x256, I-frames are tiny. CRF selection has 36x more impact than GOP tuning.</div>
+            </div>
+            <div class="approach">
+                <span class="result marginal">MARGINAL</span>
+                <div class="name">IMU Adaptive Frame Dropping</div>
+                <div class="detail">17% of frames droppable at 0.1 rad/s threshold, but "stationary" frames still show 5.4% pixel change from hand motion. H.265 skip blocks already handle temporal redundancy. Not worth ARM implementation complexity.</div>
+            </div>
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">VQ-VAE Patch Codebook</div>
+                <div class="detail">17.9 dB reconstruction quality &mdash; too low. Patch-level quantization loses spatial context.</div>
+            </div>
+            <div class="approach">
+                <span class="result fails">FAILS</span>
+                <div class="name">Cycle-Aware Compression via IMU</div>
+                <div class="detail">Workers are not performing identical motions at the IMU signal level. Autocorrelation confidence &lt;0.3. Repetition exists at a semantic level, not at the pixel/motion level.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hardware Limitations -->
+<section>
+    <div class="container">
+        <h2>Why Hardware Limits Compression</h2>
+        <p>The fundamental constraint is the device hardware. The Build AI Gen 4 device has:</p>
+
+        <div class="hardware-limit">
+            <h4>ARM Cortex-A76 (quad-core) + H.265 Hardware Encoder</h4>
+            <p style="color:#aaa;">No GPU. No NPU (Neural Processing Unit). The only video encoding available is the fixed H.265 hardware block.</p>
+        </div>
+
+        <p>This means:</p>
+        <table>
+            <thead>
+                <tr><th>What the device CAN do</th><th>What the device CANNOT do</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Downsample / bin pixels (trivial math)</td><td>Run neural networks (no GPU/NPU)</td></tr>
+                <tr><td>Drop frames</td><td>Learned compression (DCVC-RT needs A100 GPU)</td></tr>
+                <tr><td>Set H.265 encoder parameters (CRF, profile)</td><td>Content-aware encoding (needs real-time inference)</td></tr>
+                <tr><td>Simple pixel operations (area averaging)</td><td>Feature extraction, object detection</td></tr>
+            </tbody>
+        </table>
+
+        <p>Every neural codec paper (DCVC-RT, AutoGaze, OneVision) assumes encoder-side intelligence &mdash; GPU-class compute for learned transforms. With a fixed H.265 hardware encoder, these approaches are inaccessible.</p>
+
+        <p>H.265 is already extremely efficient at what it does internally: motion compensation, adaptive QP per coding tree unit, temporal skip blocks, entropy coding. 14 of our 15 approaches failed because they tried to duplicate what the codec already handles.</p>
+
+        <p><strong>The only lever external to the codec is reducing the pixel count before encoding</strong> &mdash; which is why pixel binning is the single approach that works.</p>
+
+        <h3>Path Forward: Gen 5 with NPU</h3>
+        <p>Adding a Neural Processing Unit (4+ TOPS) to future devices would unlock learned compression:</p>
+        <table>
+            <thead>
+                <tr><th>Approach</th><th>NPU Required</th><th>Expected Gain</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Neural-guided ROI (detect hands, generate QP maps)</td><td>4 TOPS</td><td class="positive">30-50% additional</td></tr>
+                <tr><td>Learned feature sideband (send features alongside H.265)</td><td>4 TOPS</td><td class="positive">2-3x additional</td></tr>
+                <tr><td>Full neural codec (replace H.265 entirely)</td><td>6+ TOPS</td><td class="positive">5-10x additional</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Physical AI Quality -->
+<section>
+    <div class="container">
+        <h2>Physical AI Quality Validation</h2>
+        <p>Computer vision primitives that Physical AI models depend on were tested across compression levels:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>CV Primitive</th>
+                    <th>Original</th>
+                    <th>2x2 Binned</th>
+                    <th>4x4 Binned</th>
+                    <th>What It Tests</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>ORB Features</td><td>100%</td><td class="positive">99.5%</td><td class="positive">97.5%</td><td>SLAM / visual odometry</td></tr>
+                <tr><td>Feature Matching</td><td>100%</td><td class="positive">100%</td><td class="positive">90.6%</td><td>Object tracking</td></tr>
+                <tr><td>Optical Flow</td><td>100%</td><td class="positive">92.9%</td><td class="neutral">86.1%</td><td>Action recognition</td></tr>
+                <tr><td>Activity Signal</td><td>100%</td><td class="positive">99.5%</td><td class="positive">98.8%</td><td>Activity classification</td></tr>
+                <tr><td>Edge Detection</td><td>100%</td><td class="negative">32.2%</td><td class="negative">13.6%</td><td>Object boundaries</td></tr>
+                <tr><td>Skin Segmentation</td><td>100%</td><td class="neutral">64.6%</td><td class="neutral">61.8%</td><td>Hand detection</td></tr>
+            </tbody>
+        </table>
+        <p>ORB features, flow, and temporal signals are well-preserved even at 4x4 binning. Edge and skin metrics degrade but measure pixel-exact overlap &mdash; the actual structures are present but shifted 1-2 pixels from upscaling.</p>
+    </div>
+</section>
+
+<!-- Dataset -->
+<section>
+    <div class="container">
+        <h2>Dataset</h2>
+        <p>100 unique workers from the <a href="https://huggingface.co/datasets/builddotai/Egocentric-100K">Egocentric-100K dataset</a>. Each worker's data: 3-minute video clips at 1080p 30fps + paired IMU sensor data at 30Hz.</p>
+        <div class="pipeline">gsutil -m cp -r gs://build-ai-egocentric-native-compression/worker_001 .</div>
+        <p>Source: Build AI Gen 4 devices, monocular head-mounted camera, 176&deg; diagonal FOV (partially rectified to ~129&deg;), H.265 encoded at ~4.7 Mbps.</p>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>
+            <a href="https://github.com/Kairos313/egocentric-compression">GitHub Repository</a> &bull;
+            <a href="https://www.egocentric.org/compression">Project Page</a> &bull;
+            Build AI &bull; 2026
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>
